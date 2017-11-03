@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+if [[ -z $1 ]]; then
+    echo "Must provide a db name"
+    exit 1
+fi
+
+program_exists() {
+    local ret='0'
+    command -v $1 >/dev/null 2>&1 || { local ret='1'; }
+
+    # fail on non-zero return value
+    if [ "$ret" -ne 0 ]; then
+        return 1
+    fi
+
+    return 0
+}
+
+program_must_exist() {
+    program_exists $1
+
+    # throw error on non-zero return value
+    if [ "$?" -ne 0 ]; then
+        error "You must have '$1' installed to continue."
+        exit 1
+    fi
+}
+
+program_must_exist sqlite3
+
+sqlite3 $1 "CREATE TABLE jira(Summary,Issuekey,Issueid,IssueType,Status,Projectkey,Projectname,Projecttype,Projectlead,Projectdescription,Projecturl,Priority,Resolution,Assignee,Reporter,Creator,Created,Updated,LastViewed,Resolved,FixVersions,FixVersions2,Components,Components2,Components3,Components4,Components5,Components6,Components7,Components8,Components9,Components10,Components11,DueDate,Votes,Labels,Labels2,Labels3,Description,Environment,Watchers,Watchers2,Watchers3,Watchers4,Watchers5,LogWork,LogWork2,LogWork3,OriginalEstimate,RemainingEstimate,TimeSpent,WorkRatio,ΣOriginalEstimate,ΣRemainingEstimate,ΣTimeSpent,SecurityLevel,Outwardissuelink_Cloners,Outwardissuelink_Tests,Outwardissuelink_Tests2,Outwardissuelink_Tests3,Attachment,Attachment2,Attachment3,Customfield_PercentDone,Customfield_AbsolutePriority,Customfield_CancelReason,Customfield_ComponentSub_Component,Customfield_Computer,Customfield_CustomOSConfigurations,Customfield_CustomerDataLossorCorruption,Customfield_CustomerVisibility,Customfield_CustomersImpacted,Customfield_DatePrioritized,Customfield_Development,Customfield_EpicLink,Customfield_EstimatedTime,Customfield_ExternalissueID,Customfield_ExternalissueID2,Customfield_FixBuildNumber,Customfield_Flagged,Customfield_ForceRank,Customfield_Impact,Customfield_IncidentClassification,Customfield_Initiative,Customfield_NetworkConfiguration,Customfield_Operationalcategorization,Customfield_OrgRedmineID,Customfield_PagerResponse,Customfield_Participants,Customfield_PrioritizedBy,Customfield_ProductServiceList,Customfield_ProductOwner,Customfield_Productcategorization,Customfield_Raisedduring,Customfield_Rank,Customfield_RequestType,Customfield_Resolution,Customfield_SMCTicketID,Customfield_SVNRevisionNumber,Customfield_ScrumTeam,Customfield_Severity,Customfield_SmarshSitesCompSubComp,Customfield_Source,Customfield_SpecialRequests,Sprint,Sprint2,Sprint3,Customfield_StepstoReproducetheerrorcondition,Customfield_StoryPoints,Customfield_TechWIKIURL,Customfield_TestEnvironments,Customfield_Testsessions,Customfield_Testingstatus,Customfield_TypeofWork,Customfield_Urgency,Customfield_[CHART]DateofFirstResponse,Comment,Comment2,Comment3,Comment4,Comment5)"
